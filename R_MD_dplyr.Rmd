@@ -1,0 +1,50 @@
+---
+title: "R_MD_dplyr"
+author: "JN-0"
+date: "2019年6月19日"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+D <- read_csv('https://raw.githubusercontent.com/OHI-Science/data-science-training/master/data/gapminder.csv')
+```
+
+**filter**
+**select**
+**mutate**
+**summarise**
+**arrange**
+
+
+```{r}
+#### filter
+filter(D, lifeExp < 35); filter(D, country == 'Mexico')
+mean(filter(D, country == 'Brazil', 1986 < year, year < 2008)$lifeExp)
+
+sub1 <- filter(D, country == 'Brazil', 1986 < year)
+sub2 <- filter(sub1, country == 'Brazil', year < 2008)
+```
+
+```{r}
+
+```
+
+```{r}
+
+
+
+```
+
+```{r}
+
+```
+
+```{r}
+plot(pressure)
+```
+
+```{r}
+
+
+```

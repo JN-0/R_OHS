@@ -11,25 +11,117 @@ Text 2
 
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
 ```
 
 ## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+```{r}
+D <- read_csv('https://raw.githubusercontent.com/OHI-Science/data-science-training/master/data/OHI_global_data.csv')
 ```
 
-## Including Plots
+```{r}
+dim(D)
 
-You can also embed plots, for example:
+ggplot(D, aes(x = georegion_one, y = OHI_score)) + geom_point()
+
+ggplot(D, aes(x = georegion_one)) + geom_bar()
+
+ggplot(D, aes(x = HDI)) + geom_histogram(binwidth = 0.005)
+
+```
+
+```{r}
+OHI_summary <- read_csv('https://raw.githubusercontent.com/OHI-Science/data-science-training/master/data/OHI_scores_georegion_summary.csv')
+```
+```{r}
+ggplot(data = OHI_summary, aes(x = georegions, y = OHI_score_average)) + geom_bar(stat = 'identity') + 
+geom_jitter(data = D, aes(x = georegion_one, y = OHI_score), width = 0.1)
+```
+
+# Equivalent
+ggplot(data = D) +
+    geom_point(aes(y = OHI_score, x = HDI, color=georegion_one))
+
+ggplot(data = D, aes(y=OHI_score, x = HDI, color=georegion_one)) +
+    geom_point()
+
+```{r}
+ggplot(data = D, aes(x = OHI_score, y = HDI, color = coastal_pop)) + 
+  geom_point()
+
+ggplot(data = D, aes(x = OHI_score, y = HDI, shape = georegion_one)) + 
+  geom_point()
+```
+
+````{r}
+ggplot(data = D, aes(x = OHI_score, y = HDI)) + 
+  geom_point() +
+  theme_classic()
+
+ggplot(data = D, aes(x = OHI_score, y = HDI, color = georegion_one)) + 
+  geom_point() +
+  labs(x = '1', y = '2', title = '3', color = 'Georegions')
+```
+
+
+
+
+
+
+#### Customize
+
+```{r}
+source('https://raw.githubusercontent.com/OHI-Science/ohiprep/master/src/R/scatterTheme.txt')
+
+ggplot(data = D, aes(x = OHI_score, y = HDI)) + 
+  geom_point() + 
+  scatterTheme
+```
+
+```{r}
+install.packages('RColorBrewer')
+install.packages("colorspace")
+
+library("RColorBrewer")
+library("colorspace")
+
+display.brewer.all()
+my_palette <- brewer.pal(n=9, "YlOrRd")
+
+ggplot(data = D, aes(x = OHI_score, y = OHI_trend, color = HDI)) + 
+  geom_point(size = 3) + 
+  scale_color_gradientn(colors = c('blue', 'red'))
+
+my_palette <- brewer.pal(n=12, "Set3")
+
+ggplot(data = D, aes(x = OHI_score, y = OHI_trend, color = georegion_one)) + 
+  geom_point(size = 3) + 
+  scale_color_manual(values = my_palette)
+
+
+```
+
+
+
+
 
 ```{r pressure, echo=FALSE}
 plot(pressure)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+```{r}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```
