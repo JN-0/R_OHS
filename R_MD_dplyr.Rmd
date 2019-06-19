@@ -27,22 +27,126 @@ sub2 <- filter(sub1, country == 'Brazil', year < 2008)
 ```
 
 ```{r}
+#### select
+select(D, year, country, lifeExp)
+select(D, -continent, -lifeExp)
+
+D_Cambodia1 <- filter(D, country == 'Cambodia')
+D_Cambodia2 <- select(D, -continent, -lifeExp)
+
+gap <- filter(D, country == 'Cambodia') %>% select(-continent, -lifeExp)
+
+gap1 <- D %>% 
+  filter(country == 'Cambodia') %>% 
+  select(-continent, -lifeExp)
 
 ```
 
 ```{r}
+#### mutant
+D %>% 
+  mutate(gdp = pop * gdpPercap)
 
+D_Asia_pop <- D %>% 
+  filter(year == 2007, continent == 'Asia') %>% 
+  mutate(D_Aisa_pop = pop/1000)
 
 
 ```
+
+#### group_by + summarise
+```{r}
+#### group_by + summarise
+D %>% 
+  filter(year == 2002) %>% 
+  group_by(continent) %>% 
+  mutate(cont_pop = sum(pop))
+
+D %>% 
+  filter(year == 2002) %>% 
+  group_by(continent) %>% 
+  summarize(cont_pop = sum(pop))
+
+df <- D %>% 
+  group_by(continent, year) %>% 
+  summarize(cont_pop = sum(pop))
+
+df <- D %>% 
+  group_by(continent, year) %>% 
+  summarize(cont_pop = sum(pop)) %>% 
+  ungroup
+```
+
+
+
 
 ```{r}
 
+D %>% 
+  group_by(continent, year) %>% 
+  mutate(GDP = pop * gdpPercap)
+  
+
+D %>% 
+  group_by(continent, year) %>% 
+  summarize(cont_gdp = sum(gdpPercap))
+
+
 ```
 
+
+
+
+
+
+
+
+
 ```{r}
-plot(pressure)
+D %>% 
+  group_by(continent, year) %>% 
+  summarize(cont_pop = sum(pop)) %>% 
+  arrange(year)
+
+
+D %>% 
+  group_by(continent, year) %>% 
+  summarize(cont_gdp = sum(gdpPercap))
+
+
+D %>% 
+  mutate(gdp = pop * gdpPercap) %>% 
+  group_by(continent) %>% 
+  mutate(maxgdp = max(gdp)) %>% 
+  filter(gdp == maxgdp)
+
+
+
+
+
+
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ```{r}
 
