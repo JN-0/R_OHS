@@ -1,0 +1,115 @@
+---
+title: "F"
+author: "JN-0"
+date: "2019年6月19日"
+output: html_document
+---
+
+```{r setup, warning = FALSE, message = FALSE}
+
+library(tidyverse)
+library(janitor)
+library(skimr)
+library(stringr)
+
+benthic_raw <- read_csv('https://www.nodc.noaa.gov/archive/arc0054/0104255/1.1/data/0-data/cd08/100308OaAla03m.CSV')
+
+buoy_raw <- read_table2('http://www.ndbc.noaa.gov/view_text_file.php?filename=mokh1h2010.txt.gz&dir=data/historical/stdmet/')
+
+benthic <- benthic_raw %>% 
+  janitor::clean_names()
+
+benthic <- benthic %>% 
+  select(id_name, point, x, y, id_date) %>% 
+  mutate(date = stringr::str_remove_all(id_date, '#'))
+
+skimr::skim(benthic)
+
+
+buoy <- buoy_raw
+
+names(buoy) <- str_c(names(buoy), buoy %>% filter(`#YY` == '#yr'), sep = '_')
+names(buoy) <- str_replace_all(names(buoy), "#", "")
+names(buoy) <- str_replace_all(names(buoy), "/", "_")
+
+buoy <- buoy %>%
+  filter(YY_yr != "#yr")
+```
+
+
+```{r}
+ggplot(benthic, aes(date, fill = id_name)) + geom_bar()
+
+ggplot(buoy, aes(WTMP_degC)) + geom_bar()
+
+ggplot(buoy, aes(WTMP_degC)) + geom_bar() +
+  theme(axis.text.x = element_text(angle = 90))
+
+buoy <- buoy %>% stringr::str_replace_all()
+
+buoy %>% 
+  mutate(WTMP_degC_new = WTMP_degC %>% stringr::str_replace_all())
+
+
+
+buoy$WTMP_degC %>% stringr::str_replace_all("999.0", NA)
+
+
+
+
+
+
+
+
+
+```
+
+
+
+
+
+
+
+```{r}
+buoy <- buoy %>%
+  unite(date, c(YY_yr, MM_mo, DD_dy), sep = "-")
+
+bb_join <- benthic %>%
+  left_join(buoy, by = "date")
+
+bb_join %>%
+  select(id_name, x, y, date, hh_hr, mm_mn, WTMP_degC)
+
+
+
+
+
+
+
+
+
+
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
